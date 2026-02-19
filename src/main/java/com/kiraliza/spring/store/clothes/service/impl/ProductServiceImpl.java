@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService
         }
         if (product.getType() != null)
         {
-            Optional<ClothesType> existClothesType = clothesTypeRepository.findByTypeIgnoreCase(product.getType().getType());
+            Optional<ClothesType> existClothesType = clothesTypeRepository.findByNameIgnoreCase(product.getType().getName());
             if (existClothesType.isEmpty())
             {
                 product.getType().setId(clothesTypeRepository.save(product.getType()).getId());

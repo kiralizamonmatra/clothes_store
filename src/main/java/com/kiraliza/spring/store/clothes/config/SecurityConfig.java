@@ -1,5 +1,6 @@
 package com.kiraliza.spring.store.clothes.config;
 
+import com.kiraliza.spring.store.clothes.controller.handler.RoleAuthenticationSuccessHandler;
 import com.kiraliza.spring.store.clothes.service.impl.MongoUserDetailsService;
 import com.kiraliza.spring.store.clothes.type.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class SecurityConfig
 {
     @Autowired
     MongoUserDetailsService userDetailsService;
+
+    @Autowired
+    private RoleAuthenticationSuccessHandler roleAuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder()
@@ -46,14 +50,15 @@ public class SecurityConfig
     {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**", "/admin").hasAllRoles(Role.ADMIN.name(), Role.MANAGER.name())
-                .requestMatchers("/**", "/login").permitAll()
+                .requestMatchers("/api/**", "/admin/**", "/catalog").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
+                .requestMatchers("/**", "/login", "/error/**").permitAll()
                 .anyRequest().authenticated()
             )
-//            .formLogin(formLogin -> formLogin
-//                .loginPage("/signin")
-//                .permitAll()
-//            )
+            .formLogin(formLogin -> formLogin
+                .loginPage("/login")
+                .successHandler(roleAuthenticationSuccessHandler)
+                .permitAll()
+            )
             .logout(LogoutConfigurer::permitAll);
 
         return http.build();

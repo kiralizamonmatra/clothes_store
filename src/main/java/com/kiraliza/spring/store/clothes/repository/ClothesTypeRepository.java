@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ClothesTypeRepository extends MongoRepository<ClothesType, String>
 {
-    Optional<ClothesType> findByTypeIgnoreCase(String type);
+    Optional<ClothesType> findByNameIgnoreCase(String name);
 }

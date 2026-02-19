@@ -12,7 +12,7 @@ public class ClothesType
 {
     @Id
     private ObjectId id;
-    private String type;
+    private String name;
     private Gender gender = Gender.ANY;
     private boolean child;
 
@@ -20,9 +20,9 @@ public class ClothesType
     {
     }
 
-    public ClothesType(String type)
+    public ClothesType(String name)
     {
-        this.type = type;
+        this.name = name;
     }
 
     public ObjectId getId()
@@ -36,14 +36,14 @@ public class ClothesType
         return this;
     }
 
-    public String getType()
+    public String getName()
     {
-        return type;
+        return name;
     }
 
-    public ClothesType setType(String type)
+    public ClothesType setName(String name)
     {
-        this.type = type;
+        this.name = name;
         return this;
     }
 
@@ -81,12 +81,12 @@ public class ClothesType
             return false;
         }
         ClothesType that = (ClothesType) o;
-        return child == that.child && Objects.equals(type, that.type) && gender == that.gender;
+        return child == that.child && Objects.equals(name, that.name) && gender == that.gender;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(type, gender, child);
+        return Objects.hash(name, gender, child);
     }
 }
