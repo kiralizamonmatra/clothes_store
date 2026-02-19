@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Clothes Catalog</title>
+</head>
+<body>
+<h1>Clothes Catalog</h1>
+<div id="clothes-list"></div>
+<button onclick="loadPage(currentPage - 1)">Previous</button>
+<button onclick="loadPage(currentPage + 1)">Next</button>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 10;
+
+    function loadPage(page) {
+        fetch(`/api/clothes?page=${page}&size=${pageSize}`)
+            .then(res => res.json())
+            .then(data => {
+                currentPage = page;
+                displayClothes(data.content);
+            });
+    }
+
+    function displayClothes(clothes) {
+        const container = document.getElementById('clothes-list');
+        container.innerHTML = '';
+        clothes.forEach(item => {
+            container.innerHTML += `
+                <div>
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    <p>Price: ${item.price}</p>
+                    <button onclick="addToCart('${item.id}')">Add to cart</button>
+                </div>
+            `;
+        });
+    }
+
+    function addToCart(productId) {
+        // Show size selection, then send request to add
+        const size = prompt("Enter size:");
+        fetch(`/api/cart/{cartId}/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: productId, size: size, quantity: 1 })
+        });
+    }
+
+    // Initial load
+    loadPage(currentPage);
+</script>
+</body>
+</html>
