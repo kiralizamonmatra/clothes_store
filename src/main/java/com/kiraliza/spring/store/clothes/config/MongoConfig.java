@@ -9,8 +9,10 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingEntityCallback;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
+//@EnableMongoRepositories
 public class MongoConfig
 {
     @Value("${spring.data.mongodb.uri}")

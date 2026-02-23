@@ -96,4 +96,9 @@ public class ProductServiceImpl implements ProductService
         }
         return productRepository.save(product);
     }
+
+    public void delete(String id)
+    {
+        productRepository.deleteById(id);
+    }
 }

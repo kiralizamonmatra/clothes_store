@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+//@Service
 public interface ProductService
 {
     List<Product> getProducts();
@@ -16,4 +16,5 @@ public interface ProductService
     Product findByShortUID(String shortUID) throws ProductNotFoundException;
     boolean isExistsByShortUID(String shortUID);
     Product save(Product product);
+    void delete(String id);
 }

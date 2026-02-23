@@ -4,6 +4,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Objects;
 
@@ -11,6 +13,7 @@ import java.util.Objects;
 public class Color
 {
     @Id
+    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     @Indexed(unique = true)
     private String name;

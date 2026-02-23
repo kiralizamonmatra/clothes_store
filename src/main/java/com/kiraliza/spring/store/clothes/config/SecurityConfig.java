@@ -1,13 +1,16 @@
 package com.kiraliza.spring.store.clothes.config;
 
 import com.kiraliza.spring.store.clothes.controller.handler.RoleAuthenticationSuccessHandler;
+import com.kiraliza.spring.store.clothes.helper.LogHelper;
 import com.kiraliza.spring.store.clothes.service.impl.MongoUserDetailsService;
 import com.kiraliza.spring.store.clothes.type.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -19,6 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig
 {
     @Autowired
@@ -50,7 +54,7 @@ public class SecurityConfig
     {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**", "/admin/**", "/catalog").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
+                .requestMatchers("/admin/**").hasAnyRole(Role.ADMIN.name(), Role.MANAGER.name())
                 .requestMatchers("/**", "/login", "/error/**").permitAll()
                 .anyRequest().authenticated()
             )

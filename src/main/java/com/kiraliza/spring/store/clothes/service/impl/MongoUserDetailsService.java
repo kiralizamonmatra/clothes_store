@@ -34,6 +34,7 @@ public class MongoUserDetailsService implements UserDetailsService
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.get().getRole().name()));
         LogHelper.info("===== USER AUTHORITIES: " + authorities.size());
+        authorities.forEach(r -> LogHelper.info("===== ROLE: " + r.getAuthority()));
 
         return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), authorities);
     }

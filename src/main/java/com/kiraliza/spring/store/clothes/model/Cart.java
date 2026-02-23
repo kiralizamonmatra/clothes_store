@@ -3,6 +3,8 @@ package com.kiraliza.spring.store.clothes.model;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ import java.util.List;
 public class Cart
 {
     @Id
+    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     private List<CartItem> items;
 

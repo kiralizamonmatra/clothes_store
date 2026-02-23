@@ -4,9 +4,16 @@ import com.kiraliza.spring.store.clothes.exception.ProductNotFoundException;
 import com.kiraliza.spring.store.clothes.model.Product;
 import com.kiraliza.spring.store.clothes.service.ProductService;
 import com.kiraliza.spring.store.clothes.type.Routes;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping(Routes.API + Routes.PRODUCT_ROOT)
@@ -16,9 +23,12 @@ public class ProductController
     private ProductService productService;
 
     @GetMapping("/{id}")
-    public Product getProduct(@RequestParam(defaultValue = "0") String id) throws ProductNotFoundException
+    public ResponseEntity<Product> getProduct(@PathVariable String id) throws ProductNotFoundException
     {
-        return productService.getProduct(id);
+        Product product = productService.getProduct(id);
+        return ResponseEntity
+            .ok()
+            .body(product);
     }
 
     @GetMapping("/list")
@@ -31,8 +41,30 @@ public class ProductController
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody Product product)
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
+    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) throws URISyntaxException
     {
-        return productService.save(product);
+        Product savedProduct = productService.save(product);
+        return ResponseEntity
+            .created(new URI(Routes.API + Routes.PRODUCT_ROOT + "/" + savedProduct.getId()))
+            .body(product);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
+    public ResponseEntity<Product> updateProduct(@Valid @RequestBody Product product)
+    {
+        Product savedProduct = productService.save(product);
+        return ResponseEntity
+            .ok()
+            .body(savedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
+    public ResponseEntity<?> deleteProduct(@PathVariable String id)
+    {
+        productService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

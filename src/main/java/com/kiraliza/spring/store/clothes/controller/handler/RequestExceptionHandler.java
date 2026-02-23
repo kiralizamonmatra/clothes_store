@@ -10,8 +10,13 @@ import com.kiraliza.spring.store.clothes.to.ProductErrorMessage;
 import com.kiraliza.spring.store.clothes.to.UserErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class RequestExceptionHandler
@@ -20,8 +25,8 @@ public class RequestExceptionHandler
     public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException e)
     {
         return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(new ErrorMessage(e.getMessage()));
+            .status(HttpStatus.FORBIDDEN)
+            .body(new ErrorMessage(e));
     }
 
     @ExceptionHandler(CartNotFoundException.class)
@@ -46,5 +51,21 @@ public class RequestExceptionHandler
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(new UserErrorMessage(e));
+    }
+
+    @ExceptionHandler(URISyntaxException.class)
+    public ResponseEntity<ErrorMessage> uriSyntaxException(URISyntaxException e)
+    {
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new ErrorMessage(e));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> methodArgumentNotValidException(MethodArgumentNotValidException e)
+    {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

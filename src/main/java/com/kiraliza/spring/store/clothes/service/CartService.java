@@ -6,7 +6,7 @@ import com.kiraliza.spring.store.clothes.model.CartItem;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public interface CartService
 {
     Cart getCart(String id) throws CartNotFoundException;

@@ -3,12 +3,15 @@ package com.kiraliza.spring.store.clothes.model;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Optional;
 
 public class CartItem
 {
     @Id
+    @JsonSerialize(using = ToStringSerializer.class)
     private ObjectId id;
     @DocumentReference
     private Product product;
